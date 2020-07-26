@@ -1,0 +1,2 @@
+model_checkpoint_path: "D:\\Corona-Chatbot\\venv\\model.tflearn"
+all_model_checkpoint_paths: "D:\\Corona-Chatbot\\venv\\model.tflearn"

@@ -5,23 +5,35 @@ stemmer = LancasterStemmer() # stemmer used to reach the root of the word : what
 import pickle
 import numpy as np
 import tflearn
-#import tensorflow as tf
+import tensorflow as tf
 import random
 import json
 
 
 
-def chat(inp):
-    training_model = True
+# def language_selecting(lang):
+#     arabic_mode=lang
+#     print(arabic_mode)
 
-    with open("intents-arabic.json",  encoding='utf8') as file:
-        data = json.load(file)
+def chat(inp,arabic_mode):
+    training_model = False 
+    print(arabic_mode)
+    if(arabic_mode):
+        with open("intents-arabic.json",  encoding='utf8') as file:
+            data = json.load(file)
+    else:
+        with open("intents.json",  encoding='utf8') as file:
+            data = json.load(file)        
         
 
     if(not training_model): 
         #make error here if you want to update
-        with open("data.pickle","rb") as f:
-            words, labels, training,output = pickle.load(f)
+        if(arabic_mode):
+            with open("data-arabic.pickle","rb") as f:
+                words, labels, training,output = pickle.load(f)
+        else:
+            with open("data.pickle","rb") as f:
+                words, labels, training,output = pickle.load(f)        
             
 
     else:
@@ -74,11 +86,15 @@ def chat(inp):
         training = np.array(training)
         output = np.array(output)
 
-        with open("data.pickle","wb") as f:
-            pickle.dump((words, labels, training,output),f)
+        if(arabic_mode):
+            with open("data-arabic.pickle","wb") as f:
+                pickle.dump((words, labels, training,output),f)
+        else:
+            with open("data.pickle","wb") as f:
+                pickle.dump((words, labels, training,output),f)        
         
 
-    #tf.reset_default_graph()
+    tf.reset_default_graph()
 
     net = tflearn.input_data(shape=[None, len(training[0])])
 
@@ -91,10 +107,16 @@ def chat(inp):
     model = tflearn.DNN(net)
     
     if(not training_model):
-        model.load("model.tflearn")
+        if(arabic_mode):
+            model.load("model-arabic.tflearn")
+        else:    
+            model.load("model.tflearn")
     else:    
         model.fit(training, output, n_epoch=2000, batch_size=32, show_metric=True)
-        model.save("model.tflearn")
+        if(arabic_mode):
+            model.save("model-arabic.tflearn")
+        else:    
+            model.save("model.tflearn")
     
     while True:
         if inp.lower() == "quit":
@@ -109,8 +131,11 @@ def chat(inp):
                     responses = tg["responses"]
             response = random.choice(responses)
             return 0, response
-        else:    
-            response = "Sorry, I don't understand ! "
+        else:  
+            if(arabic_mode):  
+                response = "انا لا افهم"
+            else:
+                response = "Sorry, I don't understand ! "    
             return 0, response
 
 

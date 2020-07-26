@@ -7,10 +7,39 @@ app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
-@app.route('/')
+global arabic_mode
+
+@app.route('/language', methods=["GET"])
 @cross_origin()
-def hello_world():
-    return 'Hello, World!'
+def ask_language():
+    if request.method == "GET":
+        data = {}
+        data["reply"] = "1.English  2.Arabic"
+        data["status"] = 'Success'
+        return jsonify(data)
+
+@app.route('/language', methods=["POST"])
+@cross_origin()
+def receive_language():
+    arabic_mode = False
+    if request.method == "POST":
+        request_data = request.get_json()
+        message = request_data['message']
+        if(message=="2"):
+            arabic_mode=True
+            status, response = 0, "Arabic Language Selected"
+        else:
+            arabic_mode=False
+            status, response = 0, "English Language Selected"
+        data = {}
+        if status == 0:
+            data["reply"] = response
+            data["status"] = 'Success'
+            return jsonify(data)
+        else:
+            data["reply"] = response
+            data["status"] = 'failed'
+            return jsonify(data)        
 
 @app.route('/chat', methods=["POST"])
 @cross_origin()
@@ -18,7 +47,7 @@ def chat():
     if request.method == "POST":
         request_data = request.get_json()
         message = request_data['message']
-        status, response = bot.chat(message)
+        status, response = bot.chat(message,arabic_mode)
         data = {}
         if status == 0:
             data["reply"] = response
