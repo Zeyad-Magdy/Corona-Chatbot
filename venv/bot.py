@@ -5,16 +5,16 @@ stemmer = LancasterStemmer() # stemmer used to reach the root of the word : what
 import pickle
 import numpy as np
 import tflearn
-import tensorflow as tf
+#import tensorflow as tf
 import random
 import json
 
 
 
 def chat(inp):
-    training_model = False
+    training_model = True
 
-    with open("intents.json",  encoding='utf8') as file:
+    with open("intents-arabic.json",  encoding='utf8') as file:
         data = json.load(file)
         
 
@@ -78,7 +78,7 @@ def chat(inp):
             pickle.dump((words, labels, training,output),f)
         
 
-    tf.reset_default_graph()
+    #tf.reset_default_graph()
 
     net = tflearn.input_data(shape=[None, len(training[0])])
 
