@@ -15,9 +15,13 @@ import json
 #     arabic_mode=lang
 #     print(arabic_mode)
 
-def chat(inp,arabic_mode):
-    training_model = False 
-    print(arabic_mode)
+
+
+
+def chat(inp):
+    f = open("language.txt", "r")
+    training_model = False
+    arabic_mode=f.read()
     if(arabic_mode):
         with open("intents-arabic.json",  encoding='utf8') as file:
             data = json.load(file)

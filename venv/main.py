@@ -9,6 +9,10 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 
 global arabic_mode
 
+f = open("language.txt", "w")
+f.write("Now the file has more content!")
+f.close()
+
 @app.route('/language', methods=["GET"])
 @cross_origin()
 def ask_language():
@@ -21,15 +25,14 @@ def ask_language():
 @app.route('/language', methods=["POST"])
 @cross_origin()
 def receive_language():
-    arabic_mode = False
     if request.method == "POST":
         request_data = request.get_json()
         message = request_data['message']
         if(message=="2"):
-            arabic_mode=True
+            f.write("True")
             status, response = 0, "Arabic Language Selected"
         else:
-            arabic_mode=False
+            f.write("False")
             status, response = 0, "English Language Selected"
         data = {}
         if status == 0:
@@ -47,7 +50,7 @@ def chat():
     if request.method == "POST":
         request_data = request.get_json()
         message = request_data['message']
-        status, response = bot.chat(message,arabic_mode)
+        status, response = bot.chat(message)
         data = {}
         if status == 0:
             data["reply"] = response
