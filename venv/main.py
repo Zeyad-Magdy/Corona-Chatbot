@@ -7,11 +7,6 @@ app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
-global arabic_mode
-
-f = open("language.txt", "w")
-f.write("Now the file has more content!")
-f.close()
 
 @app.route('/language', methods=["GET"])
 @cross_origin()
@@ -28,12 +23,14 @@ def receive_language():
     if request.method == "POST":
         request_data = request.get_json()
         message = request_data['message']
+        f = open("language.txt", "w")
         if(message=="2"):
-            f.write("True")
+            f.write("Arabic")
             status, response = 0, "Arabic Language Selected"
         else:
-            f.write("False")
+            f.write("English")
             status, response = 0, "English Language Selected"
+        f.close()    
         data = {}
         if status == 0:
             data["reply"] = response
