@@ -92,8 +92,6 @@ def chat(inp):
 
         # Part 3
 
-        training = np.array(training)
-        output = np.array(output)
 
         if(arabic_mode):
             with open("data-arabic.pickle","wb") as f:
@@ -107,9 +105,9 @@ def chat(inp):
 
     net = tflearn.input_data(shape=[None, len(training[0])])
 
-    net = tflearn.fully_connected(net, 320) #8 neurons
-    net = tflearn.fully_connected(net, 160) #8 neurons
-    net = tflearn.fully_connected(net, 80) #8 neurons
+    net = tflearn.fully_connected(net, 320) #320 neurons
+    net = tflearn.fully_connected(net, 160) #160 neurons
+    net = tflearn.fully_connected(net, 80) #80 neurons
     net = tflearn.fully_connected(net, len(output[0]), activation="softmax") 
     net = tflearn.regression(net)
 
